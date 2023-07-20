@@ -75,7 +75,7 @@ class PDB():
         self.reference_draws = np.load(f'{self.model_path}/PDB_{self.id}.samples.npy')
         self.sample_chains = np.concatenate([i for i in self.reference_draws])
         self.samples = self.sample_chains.reshape(-1, self.sample_chains.shape[-1])
-
+        np.random.shuffle(self.samples)
         
 
 
@@ -96,6 +96,8 @@ class BSDB(PDB):
         '''
         Wrapper to bridgestan log_density function to handle batches correctly
         '''
+        if type(x) is not np.ndarray:
+            x = np.array(x)
         if len(x.shape) == 1:
             return self.bsmodel.log_density(x)        
         elif len(x.shape) == 2:
@@ -106,6 +108,8 @@ class BSDB(PDB):
         '''
         Wrapper to bridgestan log_density_gradient function to handle batches correctly
         '''
+        if type(x) is not np.ndarray:
+            x = np.array(x)
         if len(x.shape) == 1:
             return self.bsmodel.log_density_gradient(x)        
         elif len(x.shape) == 2:
